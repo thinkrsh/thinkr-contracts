@@ -71,7 +71,7 @@ from the environment, as `.env.example` lists them:
 DEPLOYER_KEY="$(cat /path/to/deployer-key.txt)" \
 TOKEN=0xbd095fb55F55d59F1e16115dabe3b81D5ce035Dc \
 BURN_ADDRESS=0x000000000000000000000000000000000000dEaD \
-BURN_AMOUNT=1000000000000000000000 \
+BURN_AMOUNT=100000000000000000000 \
 OWNER=<owner address> \
 OPERATOR=<claim wallet address> \
 forge script script/Deploy.s.sol --rpc-url https://rpc.mainnet.chain.robinhood.com --broadcast
@@ -84,22 +84,29 @@ address of the factory as `CLAIM_FACTORY`.
 
 ## Deployed
 
-| Contract | Address on Robinhood Chain (4663) |
-|---|---|
-| `ClaimDepositFactory` | `0xa638F6bB5314e9F3Be61A67E49Bea2732c11cd09` |
+| Contract | Address on Robinhood Chain (4663) | Burn of one claim, at most |
+|---|---|---|
+| `ClaimDepositFactory` | `0x92A3350d512CE175A3a2623958b7420F60C7aD72` | 100 THKR |
+| `ClaimDepositFactory`, retired | `0xa638F6bB5314e9F3Be61A67E49Bea2732c11cd09` | 1,000 THKR |
 
-The factory went live on 27 Oct 2026 in block 99292118, in transaction
-`0x9911573c5d772d4858cf24637c7c7a73d3985abde01a41efbf98a51a73c55827`. It burns 1,000 THKR per claim
-at most. Its owner is the THKR treasury of Thinkr, `0x55180D0E6ebaA620Bd4533ac0F13324802B972cA`.
-Its operator is the claim wallet, `0x22e5Ab4a1505fB1381aE31E2385B54efC355bdFF`.
+The factory went live on 31 Oct 2026 in block 102269404, in transaction
+`0xf1b161b5377206c3ff6ccfdf188216244cef17b8bb8d739a8b452721643ea147`. Its owner is the THKR treasury
+of Thinkr, `0x55180D0E6ebaA620Bd4533ac0F13324802B972cA`. Its operator is the claim wallet,
+`0x22e5Ab4a1505fB1381aE31E2385B54efC355bdFF`.
 
-Sourcify holds the source of the factory as an exact match of both its creation code and its
+The retired factory went live on 27 Oct 2026 in block 99292118, in transaction
+`0x9911573c5d772d4858cf24637c7c7a73d3985abde01a41efbf98a51a73c55827`, with the same owner and
+operator. It takes no new claim, and its operator still settles and refunds the deposits of its
+claims.
+
+Sourcify holds the source of both factories as an exact match of both the creation code and the
 runtime code:
-[repo.sourcify.dev/4663/0xa638F6bB5314e9F3Be61A67E49Bea2732c11cd09](https://repo.sourcify.dev/4663/0xa638F6bB5314e9F3Be61A67E49Bea2732c11cd09).
-To verify it again from a clone:
+[0x92A3350d512CE175A3a2623958b7420F60C7aD72](https://repo.sourcify.dev/4663/0x92A3350d512CE175A3a2623958b7420F60C7aD72)
+and [0xa638F6bB5314e9F3Be61A67E49Bea2732c11cd09](https://repo.sourcify.dev/4663/0xa638F6bB5314e9F3Be61A67E49Bea2732c11cd09).
+To verify one again from a clone:
 
 ```sh
-forge verify-contract 0xa638F6bB5314e9F3Be61A67E49Bea2732c11cd09 \
+forge verify-contract 0x92A3350d512CE175A3a2623958b7420F60C7aD72 \
   src/ClaimDepositFactory.sol:ClaimDepositFactory --chain 4663 --verifier sourcify
 ```
 
