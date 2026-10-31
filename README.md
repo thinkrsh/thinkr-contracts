@@ -1,9 +1,9 @@
 # Thinkr contracts
 
-The contracts behind the claim of holder vouchers by transfer on Robinhood Chain (chain 4663).
-A wallet that holds THKR earns holder vouchers each day. A wallet app that cannot sign messages
-claims them with a transfer of THKR instead of a signature. This repository holds the contracts
-that keep that THKR.
+The contracts behind the claim of holder vouchers by transfer on Robinhood Chain (chain 4663), and
+behind the top-ups in USDG of the chat app. A wallet that holds THKR earns holder vouchers each day.
+A wallet app that cannot sign messages claims them with a transfer of THKR instead of a signature.
+This repository holds the contracts that keep that THKR, and the USDG of a top-up on its way.
 
 ## How a claim by transfer works
 
@@ -34,6 +34,21 @@ The wallet is part of the address of its deposit, so a deposit pays out to that 
 Neither the operator nor the owner can send THKR anywhere else. The owner can name another
 operator or another owner, and nothing more. The worst that a stolen operator key can do is burn
 `burnAmount` of each deposit that never settled.
+
+## How a top-up in USDG uses them
+
+Since 31 Oct 2026, a top-up in USDG in the chat app pays to a deposit of the same factory, whose
+wallet is the wallet of Thinkr that receives top-ups, `0x9EA1C6e2032a6F4Af2b358b64467A823c3e39eE2`.
+
+1. The issuer draws a random id and asks the factory for the deposit address of that wallet and id.
+2. Any wallet sends USDG to that address, with a plain transfer. The issuer reads the transfer on
+   the chain, and the credit joins a ticket of the chat of the user as blind notes.
+3. The claim wallet calls `refund(wallet, claimId, USDG)`, and the deposit sends all of its USDG to
+   the wallet of top-ups.
+
+The wallet is part of the address of its deposit, so what reaches that address can go nowhere else.
+
+## The contracts
 
 | Contract | File | Job |
 |---|---|---|
